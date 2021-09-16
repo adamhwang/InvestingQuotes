@@ -4,6 +4,10 @@ namespace InvestingQuotes
 {
     class ApiResponse
     {
-        public List<List<double>> data { get; set; }
+        public List<int> t { get; set; }
+        public List<decimal> c { get; set; }
+        public List<decimal> o { get; set; }
+        public List<decimal> h { get; set; }
+        public List<decimal> l { get; set; }
     }
 }
