@@ -15,6 +15,13 @@ namespace InvestingQuotes
         static async Task Main(string[] args)
         {
             var symbol = args[0];
+
+            var guid = Guid.NewGuid().ToString().Replace("-", "");
+            var ts = DateTimeOffset.Now.ToUnixTimeSeconds();
+            var searchResults = await $"https://tvc4.investing.com/{guid}/{ts}/1/1/8/search?limit=30&query={symbol}&type=&exchange=".GetJsonAsync<SearchResult[]>();
+
+            var instrument_id = searchResults.FirstOrDefault().ticker ?? symbol;
+
             var toDate = (DateTimeOffset)DateTime.Today;
 
             var ohlcs = new Dictionary<DateTime, OHLC>();
@@ -24,7 +31,7 @@ namespace InvestingQuotes
             {
                 // API returns _first_ 5000 records in specified date range
                 // Iterate every 10 years back to ensure we maintain full coverage
-                resp = await $"https://tvc4.investing.com/{Guid.NewGuid().ToString().Replace("-", "")}/{DateTimeOffset.Now.ToUnixTimeSeconds()}/1/1/8/history?symbol={symbol}&resolution=D&from={toDate.AddYears(-10).ToUnixTimeSeconds()}&to={toDate.ToUnixTimeSeconds()}".GetAsync();
+                resp = await $"https://tvc4.investing.com/{guid}/{ts}/1/1/8/history?symbol={instrument_id}&resolution=D&from={toDate.AddYears(-10).ToUnixTimeSeconds()}&to={toDate.ToUnixTimeSeconds()}".GetAsync();
                 var result = await resp.GetJsonAsync<ApiResponse>();
 
                 var dates = result.t.Select(t => DateTimeOffset.FromUnixTimeSeconds(t).DateTime).ToList();
