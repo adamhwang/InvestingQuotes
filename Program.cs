@@ -20,7 +20,7 @@ namespace InvestingQuotes
             var ts = DateTimeOffset.Now.ToUnixTimeSeconds();
             var searchResults = await $"https://tvc4.investing.com/{guid}/{ts}/1/1/8/search?limit=30&query={symbol}&type=&exchange=".GetJsonAsync<SearchResult[]>();
 
-            var instrument_id = searchResults.FirstOrDefault().ticker ?? symbol;
+            var instrument_id = searchResults.FirstOrDefault()?.ticker ?? symbol;
 
             var toDate = (DateTimeOffset)DateTime.Today;
 
