@@ -54,7 +54,7 @@ namespace InvestingQuotes
             }
             while (resp.StatusCode == (int)HttpStatusCode.OK);
 
-            using (var writer = new StreamWriter($"{symbol}.{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.csv"))
+            using (var writer = new StreamWriter($"{symbol}.csv"))
             using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecords(ohlcs.Values.OrderBy(o => o.Date));
